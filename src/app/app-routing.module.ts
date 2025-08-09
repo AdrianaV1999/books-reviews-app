@@ -41,6 +41,10 @@ const routes: Routes = [
       import('./pages/books/books.module').then((m) => m.BooksPageModule),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'reviews',
+    loadChildren: () => import('./pages/reviews/reviews.module').then( m => m.ReviewsPageModule)
+  },
 ];
 
 @NgModule({
