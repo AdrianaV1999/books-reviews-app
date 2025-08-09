@@ -34,6 +34,11 @@ const routes: Routes = [
         (m) => m.ResetPasswordPageModule
       ),
   },
+  {
+    path: 'books',
+    loadChildren: () =>
+      import('./pages/books/books.module').then((m) => m.BooksPageModule),
+  },
 ];
 
 @NgModule({
