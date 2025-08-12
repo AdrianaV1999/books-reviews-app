@@ -43,7 +43,9 @@ const routes: Routes = [
   },
   {
     path: 'reviews',
-    loadChildren: () => import('./pages/reviews/reviews.module').then( m => m.ReviewsPageModule)
+    loadChildren: () =>
+      import('./pages/reviews/reviews.module').then((m) => m.ReviewsPageModule),
+    canActivate: [AuthGuard],
   },
 ];
 

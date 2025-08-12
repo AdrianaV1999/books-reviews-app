@@ -22,7 +22,11 @@
   </div>
 
   <ion-list *ngIf="books.length > 0">
-    <ion-item *ngFor="let b of books" (click)="openInfo(b.infoLink)">
+    <ion-item
+      *ngFor="let b of books"
+      [routerLink]="['/reviews', b.id]"
+      [state]="{ book: b }"
+    >
       <ion-thumbnail slot="start" *ngIf="b.thumbnail">
         <img [src]="b.thumbnail" />
       </ion-thumbnail>

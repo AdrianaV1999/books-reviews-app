@@ -3,7 +3,7 @@ import { IonicModule, LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AutheticationService } from 'src/app/authetication.service';
+import { AuthenticationService } from 'src/app/authentication.service';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
-    public authService: AutheticationService,
+    public authService: AuthenticationService,
     public router: Router
   ) {}
 

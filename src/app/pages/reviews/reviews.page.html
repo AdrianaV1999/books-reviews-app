@@ -5,32 +5,61 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list *ngIf="reviews.length>0">
+  <ion-list *ngIf="reviews.length > 0">
     <ion-list-header color="light" mode="md">
       <ion-label class="ion-text-center">
-        {{reviews.length}} REVIEWS
+        {{ reviews.length }} REVIEWS
       </ion-label>
     </ion-list-header>
+    <div style="text-align: right; margin-bottom: 10px">
+      <label for="sortSelect">Sort by:</label>
+      <select id="sortSelect" [(ngModel)]="sortBy" (change)="onSortChange()">
+        <option value="date">Date</option>
+        <option value="rate">Rating</option>
+      </select>
+    </div>
 
     <ion-item *ngFor="let review of reviews">
+      <ion-thumbnail slot="start" *ngIf="review.thumbnail">
+        <img [src]="review.thumbnail" alt="Book cover" />
+      </ion-thumbnail>
       <ion-label>
+        <strong>{{ review?.bookTitle }}</strong>
+        <br />
+        <small>by {{ review?.bookAuthors?.join(', ') }}</small>
+        <br />
+        <small>{{ review?.comment }}</small>
+        <br /><br />
+
         <app-star-rating
           [initialRating]="review?.rate"
           [readonly]="true"
           [alignment]="'left'"
           [size]="'0.9rem'"
-        >
-        </app-star-rating>
+        ></app-star-rating>
+
         <div *ngIf="review?.comment">
-          <ion-text class="ion-text-wrap"> {{review?.comment}} </ion-text>
+          <ion-text class="ion-text-wrap"> {{ review?.comment }} </ion-text>
         </div>
         <p>
           <ion-text>
-            {{review?.user_name}}
-            <span> {{review?.created_at | dateAgo}} </span>
+            <p>{{ review.createdAt?.toDate() | date:'medium' }}</p>
           </ion-text>
         </p>
       </ion-label>
+
+      <ion-buttons slot="end">
+        <ion-button color="primary" fill="clear" (click)="updateReview(review)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          color="danger"
+          fill="clear"
+          (click)="deleteReview(review.id)"
+        >
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-item>
   </ion-list>
 
@@ -55,9 +84,9 @@
           </ion-buttons>
           <ion-title>REVIEW</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="dismiss(true)" [strong]="true" color="primary"
-              >SAVE</ion-button
-            >
+            <ion-button (click)="dismiss(true)" [strong]="true" color="primary">
+              SAVE
+            </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -71,8 +100,10 @@
           </ion-col>
 
           <ion-col size="12" class="rate">
-            <app-star-rating (ratingChange)="rating.rate = $event">
-            </app-star-rating>
+            <app-star-rating
+              [initialRating]="rating.rate"
+              (ratingChange)="rating.rate = $event"
+            ></app-star-rating>
           </ion-col>
 
           <ion-col size="12">
@@ -81,8 +112,7 @@
               rows="2"
               placeholder="Any Comments (optional)"
               [(ngModel)]="rating.comment"
-            >
-            </ion-textarea>
+            ></ion-textarea>
           </ion-col>
         </ion-row>
 
@@ -92,8 +122,7 @@
           [duration]="3000"
           color="danger"
           (didDismiss)="setOpen(false)"
-        >
-        </ion-toast>
+        ></ion-toast>
       </ion-content>
     </ng-template>
   </ion-modal>

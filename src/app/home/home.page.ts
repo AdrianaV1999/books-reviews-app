@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { AutheticationService } from '../authetication.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../authentication.service';
 import { Router } from '@angular/router';
+import { Auth, authState, User } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-home',
@@ -8,29 +9,28 @@ import { Router } from '@angular/router';
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
-export class HomePage {
-  email: any;
+export class HomePage implements OnInit {
+  email: string | null = null;
 
-  constructor(public route: Router, public authService: AutheticationService) {
-    this.authService
-      .getProfile()
-      .then((user) => {
-        this.email = user?.email;
-        console.log(user?.email);
-      })
-      .catch((error) => {
-        console.error('Error getting user profile:', error);
-      });
+  constructor(
+    public route: Router,
+    public authService: AuthenticationService,
+    private auth: Auth
+  ) {}
+
+  ngOnInit() {
+    authState(this.auth).subscribe((user: User | null) => {
+      this.email = user?.email ?? null;
+      console.log(this.email);
+    });
   }
 
   async logout() {
-    this.authService
-      .signOut()
-      .then(() => {
-        this.route.navigate(['/landing']);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      await this.authService.signOut();
+      this.route.navigate(['/landing']);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

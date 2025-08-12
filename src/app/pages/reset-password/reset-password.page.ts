@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { AutheticationService } from 'src/app/authetication.service';
+import { AuthenticationService } from 'src/app/authentication.service';
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-reset-password',
@@ -13,7 +13,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class ResetPasswordPage implements OnInit {
   email: any;
-  constructor(public route: Router, public authService: AutheticationService) {}
+  constructor(
+    public route: Router,
+    public authService: AuthenticationService
+  ) {}
 
   ngOnInit() {}
 

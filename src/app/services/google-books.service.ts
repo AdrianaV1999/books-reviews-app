@@ -56,4 +56,31 @@ export class GoogleBooksService {
       )
     );
   }
+  getBookById(id: string): Observable<Book | null> {
+    if (!id) {
+      return new Observable<Book | null>((subs) => {
+        subs.next(null);
+        subs.complete();
+      });
+    }
+
+    const url = `${this.API}/${id}`;
+
+    return this.http.get<any>(url).pipe(
+      map((item: any) => {
+        if (!item || !item.volumeInfo) return null;
+        const v = item.volumeInfo;
+        return {
+          id: item.id,
+          title: v.title,
+          authors: v.authors,
+          publisher: v.publisher,
+          publishedDate: v.publishedDate,
+          description: v.description,
+          thumbnail: v.imageLinks?.thumbnail?.replace('http:', 'https:'),
+          infoLink: v.infoLink,
+        } as Book;
+      })
+    );
+  }
 }

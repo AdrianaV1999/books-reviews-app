@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { RouterModule, ActivatedRoute } from '@angular/router';
+import { IonicModule, IonModal } from '@ionic/angular';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
-import { IonModal } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { DateAgoPipe } from 'src/app/pipes/date-ago/date-ago.pipe';
+import { GoogleBooksService } from 'src/app/services/google-books.service';
+import { Auth } from '@angular/fire/auth';
+import { ReviewsService, Review } from 'src/services/reviews.service';
+import { serverTimestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-reviews',
@@ -18,62 +20,150 @@ import { DateAgoPipe } from 'src/app/pipes/date-ago/date-ago.pipe';
     FormsModule,
     RouterModule,
     StarRatingComponent,
-    DateAgoPipe,
   ],
 })
 export class ReviewsPage implements OnInit {
   @ViewChild('rate_modal') rateModal!: IonModal;
 
-  reviews: any[] = [
-    {
-      rate: 5,
-      comment: 'Great work!',
-      user_name: 'User 2',
-      created_at: '2023-07-30 11:45:20',
-    },
-    {
-      rate: 4,
-      user_name: 'User 1',
-      created_at: '2023-01-22 11:51:20',
-    },
-  ];
-  rating: any = {};
-  isToastOpen = false;
-  errorMessage!: string;
+  bookId!: string;
+  book: any = null;
+  reviews: Review[] = [];
 
-  constructor() {}
+  rating = { rate: 0, comment: '' };
+  editingReviewId: string | null = null;
+
+  isToastOpen = false;
+  errorMessage = '';
+  sortBy: 'date' | 'rate' = 'date';
+  constructor(
+    private route: ActivatedRoute,
+    private reviewsService: ReviewsService,
+    private auth: Auth,
+    private googleBooksService: GoogleBooksService
+  ) {}
+
+  ngOnInit() {
+    this.bookId = this.route.snapshot.paramMap.get('bookId') || '';
+
+    const loadReviews$ = this.bookId
+      ? this.reviewsService.getUserReviewsForBook(this.bookId)
+      : this.reviewsService.getUserReviews();
+
+    loadReviews$.subscribe({
+      next: (reviews) => {
+        reviews.forEach((review) => {
+          this.googleBooksService
+            .getBookById(review.bookId)
+            .subscribe((book) => {
+              if (book?.thumbnail) {
+                (review as any).thumbnail = book.thumbnail;
+              }
+            });
+        });
+
+        this.reviews = reviews;
+        this.onSortChange();
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
   setOpen(isOpen: boolean) {
     this.isToastOpen = isOpen;
   }
 
-  dismiss(isRating = false) {
-    let data: any = null;
-    if (isRating) {
-      if (this.rating?.rate == 0) {
-        this.setOpen(true);
-        this.errorMessage = 'Please provide rating!';
-        return;
-      }
-      data = this.rating;
-      this.rating = {};
-    }
-    this.rateModal.dismiss(data);
+  openModalForNew() {
+    this.editingReviewId = null;
+    this.rating = { rate: 0, comment: '' };
+    this.rateModal.present();
   }
 
-  onWillDismiss(event: any) {
-    console.log(event?.detail?.data);
-    const data = event?.detail?.data;
-    if (data) {
-      let reviews: any[] = [];
-      reviews.push({
-        ...data,
-        user_name: 'User' + (this.reviews.length + 1),
-        created_at: new Date(),
-      });
-      reviews = reviews.concat(this.reviews);
-      this.reviews = [...reviews];
-      console.log(this.reviews);
+  openModalForEdit(review: Review) {
+    this.editingReviewId = review.id || null;
+    this.rating = {
+      rate: review.rate,
+      comment: review.comment || '',
+    };
+    this.rateModal.present();
+  }
+
+  updateReview(review: Review) {
+    this.openModalForEdit(review);
+  }
+  onSortChange() {
+    if (this.sortBy === 'date') {
+      this.sortReviewsByDate();
+    } else if (this.sortBy === 'rate') {
+      this.sortReviewsByRate();
     }
   }
-  ngOnInit() {}
+  sortReviewsByRate() {
+    this.reviews.sort((a, b) => b.rate - a.rate);
+  }
+
+  sortReviewsByDate() {
+    this.reviews.sort((a, b) => {
+      const dateA = a.updatedAt
+        ? a.updatedAt.toDate
+          ? a.updatedAt.toDate()
+          : new Date(a.updatedAt)
+        : new Date(0);
+      const dateB = b.updatedAt
+        ? b.updatedAt.toDate
+          ? b.updatedAt.toDate()
+          : new Date(b.updatedAt)
+        : new Date(0);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }
+
+  async dismiss(isSave = false) {
+    if (isSave) {
+      if (!this.rating.rate || this.rating.rate === 0) {
+        this.showError('Please provide rating!');
+        return;
+      }
+
+      const user = this.auth.currentUser;
+      if (!user) {
+        this.showError('You must be logged in to add a review.');
+        return;
+      }
+
+      const userId = user.uid;
+      const userName = user.displayName || 'User';
+
+      if (this.editingReviewId) {
+        await this.reviewsService.updateReview(this.editingReviewId, {
+          rate: this.rating.rate,
+          comment: this.rating.comment,
+          updatedAt: serverTimestamp(),
+        });
+      } else {
+        await this.reviewsService.addReview({
+          bookId: this.bookId,
+          bookTitle: this.book?.title || 'Unknown Title',
+          bookAuthors: this.book?.authors || [],
+          rate: this.rating.rate,
+          comment: this.rating.comment,
+          userId,
+          userName,
+        });
+      }
+    }
+    this.rateModal.dismiss();
+  }
+
+  onWillDismiss(event: any) {}
+
+  async deleteReview(id: string) {
+    if (confirm('Are you sure you want to delete this review?')) {
+      await this.reviewsService.deleteReview(id);
+    }
+  }
+
+  showError(msg: string) {
+    this.errorMessage = msg;
+    this.isToastOpen = true;
+  }
 }

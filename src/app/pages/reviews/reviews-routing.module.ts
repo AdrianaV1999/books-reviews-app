@@ -6,8 +6,12 @@ import { ReviewsPage } from './reviews.page';
 const routes: Routes = [
   {
     path: '',
-    component: ReviewsPage
-  }
+    component: ReviewsPage,
+  },
+  {
+    path: ':bookId',
+    component: ReviewsPage,
+  },
 ];
 
 @NgModule({
