@@ -1,14 +1,10 @@
 <ion-content [fullscreen]="true">
   <div class="container">
+    <h1>Book Reviews</h1>
     <ion-img src="assets/booksreviews.png" />
-    <ion-title
-      >Join Us To Review <br />
-      The Books!</ion-title
-    >
+    <ion-button class="join-button" [routerLink]="['/login']">
+      JOIN US NOW
+      <ion-icon slot="end" name="chevron-forward"></ion-icon>
+    </ion-button>
   </div>
-  <ion-fab vertical="bottom" horizontal="end" style="margin-bottom: 30px">
-    <ion-fab-button class="my-fab-button" [routerLink]="['/login']">
-      <ion-icon name="chevron-forward"> </ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
