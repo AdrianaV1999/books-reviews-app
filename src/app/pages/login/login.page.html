@@ -1,66 +1,96 @@
 <ion-content [fullscreen]="true">
-  <div class="header">
-    <ion-title class="title">Welcome</ion-title>
-    <p>Sign In To Access Your Account</p>
-  </div>
+  <div class="circleBase type2 circle1"></div>
+  <div class="circleBase type1"></div>
+  <div class="circleBase type2 circle2"></div>
+
+  <ion-label class="welcomeMessage">
+    <ion-text style="color: #f2e6ff">Welcome Back,</ion-text>
+    <ion-text color="light"><p>Sign In</p></ion-text>
+  </ion-label>
+
+  <ion-icon
+    name="arrow-back-outline"
+    color="white"
+    class="backButton"
+    routerLink="/home"
+  >
+  </ion-icon>
+
   <form [formGroup]="loginForm" novalidate>
     <div class="ion-padding">
-      <ion-item>
-        <ion-icon name="person-outline" slot="end"></ion-icon>
-        <ion-input
-          placeholder="email"
-          formControlName="email"
-          class="input"
-        ></ion-input>
-      </ion-item>
-      <div
-        *ngIf="this.loginForm.controls?.['email'].touched && this.loginForm.controls?.['email'].invalid"
-      >
-        <ion-text *ngIf="errorControl.email.errors?.required"
-          >Email is required.</ion-text
+      <ion-list lines="none" class="ion-margin ion-padding ion-text-center">
+        <ion-item class="ion-margin-vertical">
+          <ion-icon name="mail-outline" slot="end" color="medium"></ion-icon>
+          <ion-input
+            placeholder="Enter Email Adress"
+            formControlName="email"
+            class="input"
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="this.loginForm.controls?.['email'].touched && this.loginForm.controls?.['email'].invalid"
+          class="error-wrapper"
         >
-        <ion-text *ngIf="errorControl.email.errors?.pattern"
-          >Please provide valid email.</ion-text
-        >
-      </div>
-      <ion-item>
-        <ion-icon name="lock-closed-outline" slot="end"></ion-icon>
-        <ion-input
-          placeholder="password"
-          formControlName="password"
-          class="input"
-        >
-        </ion-input>
-      </ion-item>
-      <div
-        *ngIf="this.loginForm.controls?.['password'].touched && this.loginForm.controls?.['password'].invalid"
-      >
-        <ion-text *ngIf="errorControl.password.errors?.required"
-          >Password is required.</ion-text
-        >
-        <ion-text *ngIf="errorControl.password.errors?.pattern"
-          >Password must be more than 8 length containing at least one
-          character. at least one Capital letter. at least one number.</ion-text
-        >
-      </div>
-      <div className="forgotPassword">
-        <a [routerLink]="['/reset-password']" style="color: sandybrown"
-          >Forgot Password?</a
-        >
-      </div>
-      <div class="signupLink">
-        <p>
-          New Member?
-          <a style="color: sandybrown" [routerLink]="['/signup']"
-            >Sign Up Now</a
+          <ion-text
+            class="ion-text-left"
+            color="danger"
+            *ngIf="errorControl.email.errors?.required"
+            >Email is required.</ion-text
           >
-        </p>
-      </div>
+          <ion-text
+            class="ion-text-left"
+            color="danger"
+            *ngIf="errorControl.email.errors?.pattern"
+            >Please provide valid email.</ion-text
+          >
+        </div>
+        <ion-item>
+          <ion-icon name="lock-closed-outline" slot="end"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="Enter Password"
+            formControlName="password"
+            class="input"
+          >
+          </ion-input>
+        </ion-item>
+        <div
+          *ngIf="this.loginForm.controls?.['password'].touched && this.loginForm.controls?.['password'].invalid"
+          class="error-wrapper"
+        >
+          <ion-text
+            class="ion-text-left"
+            color="danger"
+            *ngIf="errorControl.password.errors?.required"
+            >Password is required.</ion-text
+          >
+          <ion-text
+            class="ion-text-left"
+            color="danger"
+            *ngIf="errorControl.password.errors?.pattern"
+          >
+            Password must be more than 8 length containing at least one
+            character. at least one Capital letter. at least one number.
+          </ion-text>
+        </div>
+        <div class="forgotPassword">
+          <a [routerLink]="['/reset-password']">Forgot Password?</a>
+        </div>
+        <ion-button
+          class="signin"
+          color="primary"
+          shape="round"
+          (click)="login()"
+        >
+          Sign In
+        </ion-button>
+        <div class="signupLink">
+          <p>
+            New Member?
+            <a color="primary" [routerLink]="['/signup']">Sign Up Now</a>
+          </p>
+        </div>
+      </ion-list>
     </div>
-    <ion-fab vertical="bottom" horizontal="end" style="margin-bottom: 30px">
-      <ion-fab-button class="my-fab-button" (click)="login()">
-        <ion-icon name="chevron-forward"> </ion-icon>
-      </ion-fab-button>
-    </ion-fab>
   </form>
 </ion-content>

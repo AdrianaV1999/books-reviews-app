@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, LoadingController } from '@ionic/angular';
+import {
+  IonicModule,
+  LoadingController,
+  ToastController,
+} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -19,6 +23,7 @@ export class LoginPage implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
+    public toastCtrl: ToastController,
     public authService: AuthenticationService,
     public router: Router
   ) {}
@@ -42,6 +47,7 @@ export class LoginPage implements OnInit {
       ],
     });
   }
+
   get errorControl() {
     return this.loginForm?.controls;
   }
@@ -49,21 +55,39 @@ export class LoginPage implements OnInit {
   async login() {
     const loading = await this.loadingCtrl.create();
     await loading.present();
-    if (this.loginForm?.valid) {
-      const user = await this.authService
-        .loginUser(this.loginForm.value.email, this.loginForm.value.password)
-        .catch(() => {})
-        .catch((error) => {
-          console.log(error);
-          loading.dismiss();
-        });
 
-      if (user) {
+    if (this.loginForm?.valid) {
+      try {
+        const user = await this.authService.loginUser(
+          this.loginForm.value.email,
+          this.loginForm.value.password
+        );
+
         loading.dismiss();
-        this.router.navigate(['/home']);
-      } else {
-        console.log('Provide correct values');
+
+        if (user) {
+          this.router.navigate(['/home']);
+        } else {
+          this.showInvalidCredentialsToast();
+        }
+      } catch (error) {
+        console.log(error);
+        loading.dismiss();
+        this.showInvalidCredentialsToast();
       }
+    } else {
+      loading.dismiss();
+      this.showInvalidCredentialsToast();
     }
+  }
+
+  async showInvalidCredentialsToast() {
+    const toast = await this.toastCtrl.create({
+      message: 'Invalid credentials. Please try again.',
+      duration: 3000,
+      color: 'danger',
+      position: 'top',
+    });
+    toast.present();
   }
 }

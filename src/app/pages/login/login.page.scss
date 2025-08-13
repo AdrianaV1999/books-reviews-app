@@ -1,53 +1,107 @@
-.input {
-  font-size: 300;
+.circleBase {
+  border-radius: 50%;
+}
+
+.type1 {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  background: #550086;
+  box-shadow: 0px 1px 10px rgba(178, 98, 225, 0.5);
+  top: -50px;
+  left: -50px;
+}
+
+.type2 {
+  width: 100px;
+  height: 100px;
+  background: #ddceff;
+}
+
+.circle1 {
+  margin-left: 180px;
+  margin-top: 50px;
+}
+
+.circle2 {
+  position: absolute;
+  top: 150px;
+  left: -20px;
+}
+
+.welcomeMessage {
+  position: absolute;
+  top: 70px;
+  left: 50px;
+  p {
+    font-weight: bold;
+    font-size: 1.8rem;
+    margin-top: 5px;
+  }
+}
+
+ion-list {
+  background-color: transparent;
+  transform: translateY(20vh);
+  ion-item {
+    border: 1px solid #cacaca;
+    border-radius: 10px;
+  }
 }
 
 ion-item {
-  --background: #faf1fff1;
   border-radius: 10px;
   margin-bottom: 16px;
 }
 
-.header {
-  margin: 100px;
-  margin-bottom: 80px;
-  text-align: center;
-  .subTitle {
-    color: gray;
-    font-size: 0.9rem;
-  }
-  title {
-    font-size: 2rem;
-  }
+.input {
+  font-size: 300;
 }
 
 .signupLink {
-  display: flex;
-  margin: auto;
-  flex-direction: row;
-  align-content: center;
-  position: absolute;
-  justify-content: center;
-  left: 0;
-  bottom: 0;
-  width: 80%;
-  right: 0;
+  margin-top: 30px;
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.87rem;
   }
 
   a {
     text-decoration: none;
   }
+}
 
-  .forgotPassword {
-    display: flex;
-    justify-content: flex-end;
-    a {
-      font-weight: 400;
-      font-size: 0.8rem;
-      text-decoration: none;
-    }
+.forgotPassword {
+  margin-top: 25px;
+  text-align: right;
+  width: 100%;
+
+  a {
+    font-weight: 400;
+    font-size: 0.87rem;
+    text-decoration: none;
+    color: #550086;
   }
+}
+
+ion-button {
+  width: 28vh;
+  height: 45px;
+  font-size: 16px;
+  padding: 0 20px;
+  margin-top: 35px;
+}
+
+ion-list .error-wrapper {
+  text-align: left;
+  width: 100%;
+  display: block;
+  margin-bottom: 15px;
+  font-size: 0.8rem;
+}
+
+.backButton {
+  position: absolute;
+  top: 187px;
+  left: 15px;
+  font-size: 2rem;
 }
