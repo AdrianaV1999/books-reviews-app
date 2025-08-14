@@ -1,6 +1,22 @@
 <ion-header>
   <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/home"
+        text=""
+        color="light"
+        class="small-back-button"
+      ></ion-back-button>
+    </ion-buttons>
     <ion-title>Reviews</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="logout()">
+        <i
+          class="fa fa-sign-out-alt"
+          style="color: #ff8787; font-size: 1.05rem; margin-right: 6px"
+        ></i>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

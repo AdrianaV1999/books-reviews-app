@@ -1,28 +1,66 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Blank </ion-title>
+<ion-header>
+  <ion-toolbar class="purple-toolbar">
+    <ion-title>
+      <i class="fa fa-book" style="color: white; margin-right: 8px"></i>
+      Book Reviews App
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="logout()">
+        <i
+          class="fa fa-sign-out-alt"
+          style="color: #ff8787; font-size: 1.05rem; margin-right: 6px"
+        ></i>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-list-header color="light" mode="md">
+    <ion-label class="center-text"> Latest Reviews </ion-label>
+  </ion-list-header>
 
-  <div id="container">
-    <ion-title>{{email}}</ion-title>
-    <ion-button (click)="logout()">Sign Out</ion-button>"
-    <strong>Ready to create an app?</strong>
-    <p>
-      Start with Ionic
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://ionicframework.com/docs/components"
-        >UI Components</a
+  <ion-list *ngIf="latestReviews.length > 0; else noReviews">
+    <ion-item *ngFor="let review of latestReviews">
+      <ion-thumbnail
+        slot="start"
+        *ngIf="review.thumbnail"
+        class="book-thumbnail"
       >
-    </p>
+        <img [src]="review.thumbnail" alt="Book cover" />
+      </ion-thumbnail>
+
+      <ion-label>
+        <strong>{{ review.bookTitle }}</strong><br />
+        <small>by {{ review.bookAuthors?.join(', ') }}</small><br />
+
+        <app-star-rating
+          [initialRating]="review.rate"
+          [readonly]="true"
+          [alignment]="'left'"
+          [size]="'0.9rem'"
+        ></app-star-rating>
+
+        <p>
+          <ion-text>
+            {{ review.createdAt?.toDate() | date: 'medium' }}
+          </ion-text>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #noReviews>
+    <p class="no-reviews">No reviews yet</p>
+  </ng-template>
+
+  <div style="text-align: center" class="buttons">
+    <ion-button class="my-button primary" [routerLink]="['/reviews']">
+      VIEW ALL REVIEWS
+    </ion-button>
+    <ion-button class="my-button secondary" [routerLink]="['/books']">
+      ADD NEW REVIEW
+    </ion-button>
   </div>
 </ion-content>

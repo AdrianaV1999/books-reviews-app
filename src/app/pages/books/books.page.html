@@ -5,10 +5,18 @@
         defaultHref="/reviews"
         text=""
         color="light"
-        style="margin-left: 10px; margin-top: 4px"
+        class="small-back-button"
       ></ion-back-button>
     </ion-buttons>
     <ion-title>Books</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="logout()">
+        <i
+          class="fa fa-sign-out-alt"
+          style="color: #ff8787; font-size: 1.05rem; margin-right: 6px"
+        ></i>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

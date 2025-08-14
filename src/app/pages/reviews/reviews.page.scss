@@ -73,3 +73,32 @@ app-star-rating {
   left: 15px;
   font-size: 2rem;
 }
+
+ion-title {
+  text-align: center;
+}
+
+#sortSelect {
+  padding: 5.5px 4px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+#sortSelect option {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+}
+
+.small-back-button {
+  font-size: 0.9rem;
+  --padding-start: 2px;
+  --padding-end: 2px;
+  margin-left: 10px;
+  margin-top: 4px;
+}

@@ -8,6 +8,8 @@ import { GoogleBooksService } from 'src/app/services/google-books.service';
 import { Auth } from '@angular/fire/auth';
 import { ReviewsService, Review } from 'src/services/reviews.service';
 import { serverTimestamp } from 'firebase/firestore';
+import { AuthenticationService } from 'src/app/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reviews',
@@ -38,9 +40,11 @@ export class ReviewsPage implements OnInit {
   errorMessage = '';
   sortBy: 'date' | 'rate' = 'date';
   constructor(
+    public router: Router,
     private route: ActivatedRoute,
     private reviewsService: ReviewsService,
     private auth: Auth,
+    public authService: AuthenticationService,
     private googleBooksService: GoogleBooksService
   ) {}
 
@@ -180,5 +184,13 @@ export class ReviewsPage implements OnInit {
 
   onDetailsDismiss() {
     this.selectedReview = null;
+  }
+  async logout() {
+    try {
+      await this.authService.signOut();
+      this.router.navigate(['/landing']);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

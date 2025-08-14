@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { IonicModule, IonModal } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { GoogleBooksService, Book } from '../../services/google-books.service';
@@ -10,6 +10,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
+import { AuthenticationService } from 'src/app/authentication.service';
 
 @Component({
   selector: 'app-books',
@@ -41,7 +42,9 @@ export class BooksPage implements OnInit {
   constructor(
     private booksSrv: GoogleBooksService,
     private reviewsService: ReviewsService,
-    private auth: Auth
+    private auth: Auth,
+    public router: Router,
+    public authService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -124,5 +127,14 @@ export class BooksPage implements OnInit {
 
   setOpen(isOpen: boolean) {
     this.isToastOpen = isOpen;
+  }
+
+  async logout() {
+    try {
+      await this.authService.signOut();
+      this.router.navigate(['/landing']);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

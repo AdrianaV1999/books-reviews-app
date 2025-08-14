@@ -105,3 +105,15 @@
   --background: #44007c;
   color: #ffffff;
 }
+
+ion-title {
+  text-align: center;
+}
+
+.small-back-button {
+  font-size: 0.9rem;
+  --padding-start: 2px;
+  --padding-end: 2px;
+  margin-left: 10px;
+  margin-top: 4px;
+}
