@@ -1,27 +1,48 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { IonicModule, IonModal } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 import { GoogleBooksService, Book } from '../../services/google-books.service';
+import { ReviewsService } from 'src/services/reviews.service';
+import { Auth } from '@angular/fire/auth';
+import { serverTimestamp } from 'firebase/firestore';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { StarRatingComponent } from '../star-rating/star-rating.component';
 
 @Component({
   selector: 'app-books',
   templateUrl: './books.page.html',
   styleUrls: ['./books.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    StarRatingComponent,
+  ],
 })
 export class BooksPage implements OnInit {
+  @ViewChild('rateModal') rateModal!: IonModal;
+
   searchTerm = '';
   books: Book[] = [];
   loading = false;
   error = '';
   private search$ = new Subject<string>();
 
-  constructor(private booksSrv: GoogleBooksService) {}
+  selectedBook: Book | null = null;
+  rating = { rate: 0, comment: '' };
+  isToastOpen = false;
+  errorMessage = '';
+
+  constructor(
+    private booksSrv: GoogleBooksService,
+    private reviewsService: ReviewsService,
+    private auth: Auth
+  ) {}
 
   ngOnInit() {
     this.search$
@@ -59,8 +80,49 @@ export class BooksPage implements OnInit {
     });
   }
 
-  openInfo(link?: string) {
-    if (!link) return;
-    window.open(link, '_blank');
+  openModalForBook(book: Book) {
+    this.selectedBook = book;
+    this.rating = { rate: 0, comment: '' };
+    this.rateModal.present();
+  }
+
+  async dismissModal(isSave = false) {
+    if (isSave) {
+      if (!this.rating.rate || this.rating.rate === 0) {
+        this.showError('Please provide rating!');
+        return;
+      }
+
+      const user = this.auth.currentUser;
+      if (!user) {
+        this.showError('You must be logged in to add a review.');
+        return;
+      }
+
+      await this.reviewsService.addReview({
+        bookId: this.selectedBook?.id || '',
+        bookTitle: this.selectedBook?.title || 'Unknown Title',
+        bookAuthors: this.selectedBook?.authors || [],
+        rate: this.rating.rate,
+        comment: this.rating.comment,
+        userId: user.uid,
+        userName: user.displayName || 'User',
+      });
+    }
+    this.rateModal.dismiss();
+  }
+
+  onModalDismiss() {
+    this.rating = { rate: 0, comment: '' };
+    this.selectedBook = null;
+  }
+
+  showError(msg: string) {
+    this.errorMessage = msg;
+    this.isToastOpen = true;
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isToastOpen = isOpen;
   }
 }

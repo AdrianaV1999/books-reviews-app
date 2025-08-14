@@ -27,6 +27,7 @@
     "@capacitor/haptics": "7.0.2",
     "@capacitor/keyboard": "7.0.2",
     "@capacitor/status-bar": "7.0.2",
+    "@fortawesome/fontawesome-free": "^7.0.0",
     "@ionic/angular": "^8.0.0",
     "firebase": "^11.10.0",
     "ionicons": "^7.0.0",

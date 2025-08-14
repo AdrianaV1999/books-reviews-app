@@ -1,24 +1,107 @@
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+
 .books-page {
-  ion-searchbar {
-    margin: 12px;
+  ion-list {
+    ion-list-header {
+      ion-label {
+        font-size: 0.9rem;
+      }
+    }
+
+    ion-item {
+      ion-label {
+        font-weight: medium;
+
+        h2 {
+          margin: 0;
+        }
+
+        p {
+          margin-top: 5px;
+
+          &.snippet {
+            font-size: 0.75rem;
+            span {
+              font-weight: normal;
+              margin-left: 10px;
+            }
+          }
+        }
+
+        ion-note {
+          font-size: 0.75rem;
+          color: rgb(37, 0, 54);
+        }
+
+        div {
+          margin-top: 8px;
+          ion-text {
+            font-size: 0.9rem;
+          }
+        }
+      }
+
+      ion-thumbnail {
+        height: 100%;
+        aspect-ratio: 2 / 3;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
   }
+
+  ion-searchbar {
+    margin-bottom: 10px;
+  }
+
   .loading-wrap {
     display: flex;
     justify-content: center;
     margin-top: 20px;
   }
+
   .no-results {
     text-align: center;
     margin-top: 20px;
-    color: var(--ion-color-medium);
+    color: gray;
   }
-  ion-item h2 {
-    font-size: 16px;
-    margin-bottom: 4px;
+
+  ion-text[color="danger"] {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
   }
-  .snippet {
-    color: var(--ion-color-medium);
-    font-size: 14px;
-    margin-top: 6px;
+
+  .custom-searchbar-wrap {
+    margin-top: 20pt;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 10pt;
+    .search-icon {
+      position: absolute;
+      right: 30px;
+      margin-top: 12px;
+      font-size: 1.2rem;
+      color: #44007c;
+      pointer-events: none;
+      font-weight: 600;
+    }
+    .custom-searchbar {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      outline: none;
+    }
   }
+}
+.purple-toolbar {
+  --background: #44007c;
+  color: #ffffff;
 }

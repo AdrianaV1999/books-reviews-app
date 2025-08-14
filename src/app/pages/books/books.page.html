@@ -1,35 +1,43 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="purple-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/reviews"
+        text=""
+        color="light"
+        style="margin-left: 10px; margin-top: 4px"
+      ></ion-back-button>
+    </ion-buttons>
     <ion-title>Books</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="books-page">
-  <ion-searchbar
-    placeholder="Pretraži knjige"
-    [(ngModel)]="searchTerm"
-    (ionInput)="onSearchInput($event)"
-    (ionClear)="onClear()"
-  >
-  </ion-searchbar>
+  <div class="custom-searchbar-wrap">
+    <i class="fa fa-search search-icon"></i>
+    <input
+      type="text"
+      placeholder="Find a book to review…"
+      [(ngModel)]="searchTerm"
+      (input)="onSearchInput($event)"
+      class="custom-searchbar"
+    />
+  </div>
 
   <div class="loading-wrap" *ngIf="loading">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
   <div *ngIf="!loading && books.length === 0 && searchTerm" class="no-results">
-    Nema rezultata za "{{ searchTerm }}"
+    No results for "{{ searchTerm }}"
   </div>
 
   <ion-list *ngIf="books.length > 0">
-    <ion-item
-      *ngFor="let b of books"
-      [routerLink]="['/reviews', b.id]"
-      [state]="{ book: b }"
-    >
+    <ion-item *ngFor="let b of books" detail="false">
       <ion-thumbnail slot="start" *ngIf="b.thumbnail">
         <img [src]="b.thumbnail" />
       </ion-thumbnail>
+
       <ion-label>
         <h2>{{ b.title }}</h2>
         <p *ngIf="b.authors">{{ b.authors.join(', ') }}</p>
@@ -39,8 +47,76 @@
         ></p>
         <ion-note *ngIf="b.publishedDate">{{ b.publishedDate }}</ion-note>
       </ion-label>
+
+      <ion-icon
+        name="chevron-forward"
+        slot="end"
+        style="color: #9c27b0; font-size: 20px; cursor: pointer"
+        (click)="openModalForBook(b)"
+      ></ion-icon>
     </ion-item>
   </ion-list>
 
   <ion-text color="danger" *ngIf="error">{{ error }}</ion-text>
+
+  <ion-modal
+    #rateModal
+    [initialBreakpoint]="0.75"
+    [breakpoints]="[0, 0.25, 0.5, 0.75, 0.9]"
+    (willDismiss)="onModalDismiss()"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="dismissModal()" color="danger"
+              >Cancel</ion-button
+            >
+          </ion-buttons>
+          <ion-title>Review</ion-title>
+          <ion-buttons slot="end">
+            <ion-button
+              (click)="dismissModal(true)"
+              color="primary"
+              [strong]="true"
+              >Save</ion-button
+            >
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <ion-row>
+          <ion-col size="12" class="ion-text-center">
+            <ion-label color="dark" class="ion-text-wrap">
+              Please provide your valuable feedback
+            </ion-label>
+          </ion-col>
+
+          <ion-col size="12" class="rate">
+            <app-star-rating
+              [initialRating]="rating.rate"
+              (ratingChange)="rating.rate = $event"
+            ></app-star-rating>
+          </ion-col>
+
+          <ion-col size="12">
+            <ion-textarea
+              rows="2"
+              placeholder="Any Comments (optional)"
+              [(ngModel)]="rating.comment"
+            ></ion-textarea>
+          </ion-col>
+        </ion-row>
+
+        <ion-toast
+          [isOpen]="isToastOpen"
+          [message]="errorMessage"
+          [duration]="3000"
+          color="danger"
+          (didDismiss)="isToastOpen=false"
+        ></ion-toast>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

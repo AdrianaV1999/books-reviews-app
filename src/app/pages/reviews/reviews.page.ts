@@ -24,6 +24,8 @@ import { serverTimestamp } from 'firebase/firestore';
 })
 export class ReviewsPage implements OnInit {
   @ViewChild('rate_modal') rateModal!: IonModal;
+  @ViewChild('details_modal') detailsModal!: IonModal;
+  selectedReview: Review | null = null;
 
   bookId!: string;
   book: any = null;
@@ -165,5 +167,18 @@ export class ReviewsPage implements OnInit {
   showError(msg: string) {
     this.errorMessage = msg;
     this.isToastOpen = true;
+  }
+
+  openDetailsModal(review: Review) {
+    this.selectedReview = review;
+    this.detailsModal.present();
+  }
+
+  closeDetailsModal() {
+    this.detailsModal.dismiss();
+  }
+
+  onDetailsDismiss() {
+    this.selectedReview = null;
   }
 }

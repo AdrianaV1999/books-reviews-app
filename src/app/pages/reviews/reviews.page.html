@@ -1,5 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="warning">
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-title>Reviews</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -7,29 +7,38 @@
 <ion-content [fullscreen]="true">
   <ion-list *ngIf="reviews.length > 0">
     <ion-list-header color="light" mode="md">
-      <ion-label class="ion-text-center">
-        {{ reviews.length }} REVIEWS
-      </ion-label>
+      <ion-label> {{ reviews.length }} Reviews </ion-label>
+      <div
+        style="
+          text-align: right;
+          margin-right: 20px;
+          margin-bottom: 10px;
+          margin-top: 10px;
+        "
+      >
+        <label for="sortSelect">Sort by: </label>
+        <select id="sortSelect" [(ngModel)]="sortBy" (change)="onSortChange()">
+          <option value="date">Date</option>
+          <option value="rate">Rating</option>
+        </select>
+      </div>
     </ion-list-header>
-    <div style="text-align: right; margin-bottom: 10px">
-      <label for="sortSelect">Sort by:</label>
-      <select id="sortSelect" [(ngModel)]="sortBy" (change)="onSortChange()">
-        <option value="date">Date</option>
-        <option value="rate">Rating</option>
-      </select>
-    </div>
 
     <ion-item *ngFor="let review of reviews">
-      <ion-thumbnail slot="start" *ngIf="review.thumbnail">
+      <ion-thumbnail
+        slot="start"
+        *ngIf="review.thumbnail"
+        class="book-thumbnail"
+        (click)="openDetailsModal(review)"
+      >
         <img [src]="review.thumbnail" alt="Book cover" />
       </ion-thumbnail>
+
       <ion-label>
         <strong>{{ review?.bookTitle }}</strong>
         <br />
         <small>by {{ review?.bookAuthors?.join(', ') }}</small>
         <br />
-        <small>{{ review?.comment }}</small>
-        <br /><br />
 
         <app-star-rating
           [initialRating]="review?.rate"
@@ -38,9 +47,6 @@
           [size]="'0.9rem'"
         ></app-star-rating>
 
-        <div *ngIf="review?.comment">
-          <ion-text class="ion-text-wrap"> {{ review?.comment }} </ion-text>
-        </div>
         <p>
           <ion-text>
             <p>{{ review.createdAt?.toDate() | date:'medium' }}</p>
@@ -64,7 +70,7 @@
   </ion-list>
 
   <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-    <ion-fab-button id="open-modal">
+    <ion-fab-button [routerLink]="['/books']">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -123,6 +129,53 @@
           color="danger"
           (didDismiss)="setOpen(false)"
         ></ion-toast>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal
+    #details_modal
+    [initialBreakpoint]="0.75"
+    [breakpoints]="[0, 0.25, 0.5, 0.75, 0.9]"
+    (willDismiss)="onDetailsDismiss()"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="closeDetailsModal()" color="danger"
+              >Close</ion-button
+            >
+          </ion-buttons>
+          <ion-title>Review Details</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <div class="ion-text-center">
+          <img
+            *ngIf="selectedReview?.thumbnail"
+            [src]="selectedReview?.thumbnail"
+            alt="Book cover"
+            style="max-width: 150px; border-radius: 8px"
+          />
+          <h2>{{ selectedReview?.bookTitle }}</h2>
+          <p>
+            <strong>Authors:</strong> {{ selectedReview?.bookAuthors?.join(', ')
+            }}
+          </p>
+          <app-star-rating
+            [initialRating]="selectedReview?.rate"
+            [readonly]="true"
+          ></app-star-rating>
+          <p>
+            <strong>Date:</strong> {{ selectedReview?.createdAt?.toDate() |
+            date:'medium' }}
+          </p>
+          <p *ngIf="selectedReview?.comment">
+            <strong>Comment:</strong> {{ selectedReview?.comment }}
+          </p>
+        </div>
       </ion-content>
     </ng-template>
   </ion-modal>
