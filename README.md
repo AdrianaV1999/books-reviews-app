@@ -14,7 +14,7 @@ This mobile application allows users to review books and manage their reviews. I
 
 Navigation is managed using **Angular Routing**.
 
-## API Integrations
+## Integrations
 
 - **Google Books API** — Fetches book information for search and review creation.
 - **Firebase Authentication** — Manages user sign-up, login and password reset.
