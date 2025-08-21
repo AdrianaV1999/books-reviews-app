@@ -10,10 +10,6 @@ This mobile application allows users to review books and manage their reviews. I
 - Sort reviews by date or rating.
 - Real-time updates using Firebase.
 
-## Routing Concept
-
-Navigation is managed using **Angular Routing**.
-
 ## Integrations
 
 - **Google Books API** — Fetches book information for search and review creation.
