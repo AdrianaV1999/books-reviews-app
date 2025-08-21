@@ -6,39 +6,39 @@ This mobile application allows users to review books and manage their reviews. I
 
 ### **Main Screen**
 
-<img src="src/assets/0.png" alt="Main Page" width="300">
+<img src="src/assets/0.png" alt="Main" width="260">
 
 ### **Sign Up Screen**
 
-<img src="src/assets/2.png" alt="Sign Up" width="300">
+<img src="src/assets/2.png" alt="Sign Up" width="260">
 
 ### **Sign In Screen**
 
-<img src="src/assets/1.png" alt="Sign In" width="300">
+<img src="src/assets/9.png" alt="Sign In" width="260">
+
+### **Change Password Screen**
+
+<img src="src/assets/3.png" alt="Password" width="260">
 
 ### **Home Screen**
 
-<img src="src/assets/3.png" alt="Home" width="300">
+<img src="src/assets/4.png" alt="Home" width="260">
 
-### **Home Screen**
+### **Reviews Screen**
 
-<img src="src/assets/4.png" alt="Home" width="300">
+<img src="src/assets/5.png" alt="Reviews" width="260">
 
-### **Home Screen**
+### **Review Details Screen**
 
-<img src="src/assets/5.png" alt="Home" width="300">
+<img src="src/assets/6.png" alt="Details" width="260">
 
-### **Home Screen**
+### **Search Books Screen**
 
-<img src="src/assets/6.png" alt="Home" width="300">
+<img src="src/assets/7.png" alt="Search" width="260">
 
-### **Home Screen**
+### **Add Review Screen**
 
-<img src="src/assets/7.png" alt="Home" width="300">
-
-### **Home Screen**
-
-<img src="src/assets/8.png" alt="Home" width="300">
+<img src="src/assets/8.png" alt="Add" width="260">
 
 
 ## Features
