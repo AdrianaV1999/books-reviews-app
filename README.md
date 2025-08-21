@@ -2,6 +2,45 @@
 
 This mobile application allows users to review books and manage their reviews. It is built with **Angular**, **Ionic** and **Firebase**.
 
+## Screenshots
+
+### **Main Screen**
+
+<img src="src/assets/0.png" alt="Main Page" width="300">
+
+### **Sign Up Screen**
+
+<img src="src/assets/2.png" alt="Sign Up" width="300">
+
+### **Sign In Screen**
+
+<img src="src/assets/1.png" alt="Sign In" width="300">
+
+### **Home Screen**
+
+<img src="src/assets/3.png" alt="Home" width="300">
+
+### **Home Screen**
+
+<img src="src/assets/4.png" alt="Home" width="300">
+
+### **Home Screen**
+
+<img src="src/assets/5.png" alt="Home" width="300">
+
+### **Home Screen**
+
+<img src="src/assets/6.png" alt="Home" width="300">
+
+### **Home Screen**
+
+<img src="src/assets/7.png" alt="Home" width="300">
+
+### **Home Screen**
+
+<img src="src/assets/8.png" alt="Home" width="300">
+
+
 ## Features
 
 - User authentication: register, login and reset forgotten passwords.
